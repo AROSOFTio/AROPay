@@ -204,12 +204,82 @@ XML;
     }
 
     /**
+     * Send money to a mobile wallet (B2C — Account to Customer withdrawal).
+     *
+     * @param array $params { amount, phone, network, reference, narrative }
+     * @return array|WP_Error { transaction_reference } or WP_Error
+     */
+    public function send_money( $params ) {
+        $xml      = $this->build_send_money_xml( $params );
+        $response = $this->post( $xml );
+
+        if ( is_wp_error( $response ) ) {
+            return $response;
+        }
+
+        $parsed = $this->parse_response( $response );
+        if ( is_wp_error( $parsed ) ) {
+            return $parsed;
+        }
+
+        if ( isset( $parsed['Status'] ) && 'OK' === strtoupper( $parsed['Status'] ) ) {
+            return array(
+                'transaction_reference' => $parsed['TransactionReferenceId'] ?? $params['reference'],
+            );
+        }
+
+        $error_msg = $parsed['StatusMessage'] ?? $parsed['ErrorMessage'] ?? __( 'Withdrawal request failed.', 'aropay' );
+        return new WP_Error( 'yo_withdrawal_failed', $error_msg );
+    }
+
+    /**
+     * Build the ACWithdrawal (B2C) XML request body.
+     */
+    private function build_send_money_xml( $params ) {
+        $narrative = esc_xml( $params['narrative'] ?? 'AROPay Wallet Withdrawal' );
+        $phone     = esc_xml( $params['phone'] );
+        $amount    = (int) round( $params['amount'] );
+        $reference = esc_xml( $params['reference'] );
+        $username  = esc_xml( $this->username );
+        $password  = esc_xml( $this->password );
+        $callback  = esc_xml( self::get_withdrawal_callback_url() );
+
+        return <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<AutoCreate>
+  <Request>
+    <APIUsername>{$username}</APIUsername>
+    <APIPassword>{$password}</APIPassword>
+    <Method>acwithdrawal</Method>
+    <Amount>{$amount}</Amount>
+    <Account>{$phone}</Account>
+    <Currency>UGX</Currency>
+    <ExternalReference>{$reference}</ExternalReference>
+    <Narrative>{$narrative}</Narrative>
+    <InternalReferenceID>{$reference}</InternalReferenceID>
+    <NotificationURL>{$callback}</NotificationURL>
+    <ProviderReferenceNumber>{$reference}</ProviderReferenceNumber>
+  </Request>
+</AutoCreate>
+XML;
+    }
+
+    /**
      * Build the IPN/callback URL for Yo.
      *
      * @return string
      */
     public static function get_callback_url() {
         return rest_url( 'aropay/v1/ipn/yo' );
+    }
+
+    /**
+     * Build the IPN callback URL for wallet withdrawals.
+     *
+     * @return string
+     */
+    public static function get_withdrawal_callback_url() {
+        return rest_url( 'aropay/v1/ipn/withdrawal' );
     }
 
     /**

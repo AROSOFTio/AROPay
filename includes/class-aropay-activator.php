@@ -127,10 +127,108 @@ class AROPay_Activator {
             KEY created_at (created_at)
         ) $charset;";
 
+        // ── Wallets ──────────────────────────────────────────────────
+        $sql_wallets = "CREATE TABLE {$wpdb->prefix}aropay_wallets (
+            id                BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            user_id           BIGINT(20) UNSIGNED NOT NULL,
+            balance           DECIMAL(15,2) NOT NULL DEFAULT '0.00',
+            pending_balance   DECIMAL(15,2) NOT NULL DEFAULT '0.00',
+            currency          VARCHAR(10)  NOT NULL DEFAULT 'UGX',
+            total_credited    DECIMAL(15,2) NOT NULL DEFAULT '0.00',
+            total_withdrawn   DECIMAL(15,2) NOT NULL DEFAULT '0.00',
+            created_at        DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at        DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (id),
+            UNIQUE KEY user_id (user_id)
+        ) $charset;";
+
+        // ── Wallet Phones ─────────────────────────────────────────────
+        $sql_wallet_phones = "CREATE TABLE {$wpdb->prefix}aropay_wallet_phones (
+            id                BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            user_id           BIGINT(20) UNSIGNED NOT NULL,
+            phone             VARCHAR(20)  NOT NULL,
+            network           ENUM('mtn','airtel') NOT NULL,
+            label             VARCHAR(100) DEFAULT NULL,
+            status            ENUM('pending','approved','rejected','inactive') NOT NULL DEFAULT 'pending',
+            is_active         TINYINT(1)   NOT NULL DEFAULT 1,
+            approved_by       BIGINT(20) UNSIGNED DEFAULT NULL,
+            approved_at       DATETIME     DEFAULT NULL,
+            rejection_note    TEXT         DEFAULT NULL,
+            created_at        DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at        DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (id),
+            KEY user_id (user_id),
+            KEY status (status),
+            KEY network (network)
+        ) $charset;";
+
+        // ── Wallet Phone Change Requests ──────────────────────────────
+        $sql_phone_changes = "CREATE TABLE {$wpdb->prefix}aropay_wallet_phone_changes (
+            id                BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            user_id           BIGINT(20) UNSIGNED NOT NULL,
+            phone_id          BIGINT(20) UNSIGNED NOT NULL,
+            new_phone         VARCHAR(20)  NOT NULL,
+            new_label         VARCHAR(100) DEFAULT NULL,
+            network           ENUM('mtn','airtel') NOT NULL,
+            status            ENUM('pending','approved','rejected') NOT NULL DEFAULT 'pending',
+            reviewed_by       BIGINT(20) UNSIGNED DEFAULT NULL,
+            reviewed_at       DATETIME     DEFAULT NULL,
+            notes             TEXT         DEFAULT NULL,
+            created_at        DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at        DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (id),
+            KEY user_id (user_id),
+            KEY phone_id (phone_id),
+            KEY status (status)
+        ) $charset;";
+
+        // ── Wallet Withdrawals ────────────────────────────────────────
+        $sql_withdrawals = "CREATE TABLE {$wpdb->prefix}aropay_wallet_withdrawals (
+            id                BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            wallet_id         BIGINT(20) UNSIGNED NOT NULL,
+            user_id           BIGINT(20) UNSIGNED NOT NULL,
+            phone_id          BIGINT(20) UNSIGNED NOT NULL,
+            amount            DECIMAL(15,2) NOT NULL,
+            fee               DECIMAL(15,2) NOT NULL DEFAULT '0.00',
+            net_amount        DECIMAL(15,2) NOT NULL DEFAULT '0.00',
+            provider_ref      VARCHAR(255) DEFAULT NULL,
+            internal_ref      VARCHAR(100) NOT NULL,
+            status            ENUM('pending','processing','completed','failed') NOT NULL DEFAULT 'pending',
+            failure_reason    TEXT         DEFAULT NULL,
+            created_at        DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at        DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (id),
+            UNIQUE KEY internal_ref (internal_ref),
+            KEY wallet_id (wallet_id),
+            KEY user_id (user_id),
+            KEY status (status),
+            KEY created_at (created_at)
+        ) $charset;";
+
+        // ── Wallet Audit Log ──────────────────────────────────────────
+        $sql_audit = "CREATE TABLE {$wpdb->prefix}aropay_wallet_audit_log (
+            id                BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            user_id           BIGINT(20) UNSIGNED NOT NULL,
+            action            VARCHAR(60)  NOT NULL,
+            amount            DECIMAL(15,2) DEFAULT NULL,
+            meta              LONGTEXT     DEFAULT NULL,
+            ip_address        VARCHAR(45)  DEFAULT NULL,
+            created_at        DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (id),
+            KEY user_id (user_id),
+            KEY action (action),
+            KEY created_at (created_at)
+        ) $charset;";
+
         dbDelta( $sql_merchants );
         dbDelta( $sql_transactions );
         dbDelta( $sql_settlements );
         dbDelta( $sql_logs );
+        dbDelta( $sql_wallets );
+        dbDelta( $sql_wallet_phones );
+        dbDelta( $sql_phone_changes );
+        dbDelta( $sql_withdrawals );
+        dbDelta( $sql_audit );
     }
 
     /**
@@ -150,6 +248,8 @@ class AROPay_Activator {
             'aropay_yo_password'             => '',
             'aropay_pesapal_consumer_key'    => '',
             'aropay_pesapal_consumer_secret' => '',
+            'aropay_withdrawal_fee_percent'  => '1.50',
+            'aropay_min_withdrawal_ugx'      => '5000',
         );
 
         foreach ( $defaults as $key => $value ) {

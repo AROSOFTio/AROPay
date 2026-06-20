@@ -3,7 +3,7 @@
  * Plugin Name:       AROPay
  * Plugin URI:        https://arosoftlabs.com/market/plugins/aropay
  * Description:       Uganda's premier payment gateway — MTN MoMo, Airtel Money & Cards via Yo Uganda and Pesapal OpenFloat. Powered by AROSOFT.
- * Version:           1.0.0
+ * Version:           1.1.0
  * Author:            AROSOFT
  * Author URI:        https://arosoftlabs.com
  * License:           GPL-2.0+
@@ -23,7 +23,7 @@
 defined( 'ABSPATH' ) || exit;
 
 // Plugin constants
-define( 'AROPAY_VERSION',      '1.0.0' );
+define( 'AROPAY_VERSION',      '1.1.0' );
 define( 'AROPAY_PLUGIN_FILE',  __FILE__ );
 define( 'AROPAY_PLUGIN_DIR',   plugin_dir_path( __FILE__ ) );
 define( 'AROPAY_PLUGIN_URL',   plugin_dir_url( __FILE__ ) );
