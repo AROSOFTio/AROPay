@@ -1,0 +1,409 @@
+# Copyright (C) 2024 AROSOFT
+# This file is distributed under the GPL-2.0+ license.
+msgid ""
+msgstr ""
+"Project-Id-Version: AROPay 1.0.0\n"
+"Report-Msgid-Bugs-To: https://arosoftlabs.com/market/plugins/aropay\n"
+"POT-Creation-Date: 2024-01-01 00:00+0300\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: AROSOFT <info@arosoftlabs.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Generator: AROPay 1.0.0\n"
+"X-Domain: aropay\n"
+
+msgid "AROPay"
+msgstr ""
+
+msgid "Uganda's premier payment gateway — MTN MoMo, Airtel Money & Cards via Yo Uganda and Pesapal OpenFloat. Powered by AROSOFT."
+msgstr ""
+
+msgid "AROPay requires WooCommerce to be installed and active."
+msgstr ""
+
+msgid "AROPay requires WooCommerce %s or higher. You are running %s."
+msgstr ""
+
+msgid "AROPay requires PHP %s or higher. You are running PHP %s."
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Docs"
+msgstr ""
+
+msgid "Mobile Money (MTN / Airtel)"
+msgstr ""
+
+msgid "AROPay — MTN & Airtel MoMo"
+msgstr ""
+
+msgid "Accept MTN Mobile Money and Airtel Money payments via Yo Uganda. Powered by AROSOFT."
+msgstr ""
+
+msgid "Card / Mobile Money (Pesapal)"
+msgstr ""
+
+msgid "AROPay — Cards & MoMo (Pesapal)"
+msgstr ""
+
+msgid "Accept Visa, Mastercard, MTN MoMo and Airtel Money via Pesapal OpenFloat. Powered by AROSOFT."
+msgstr ""
+
+msgid "Enable / Disable"
+msgstr ""
+
+msgid "Enable AROPay Mobile Money"
+msgstr ""
+
+msgid "Enable AROPay Pesapal Gateway"
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Payment method title shown at checkout."
+msgstr ""
+
+msgid "Description"
+msgstr ""
+
+msgid "Shown to the customer at checkout."
+msgstr ""
+
+msgid "Pay with MTN Mobile Money or Airtel Money. You will receive a prompt on your phone."
+msgstr ""
+
+msgid "Pay securely with Visa, Mastercard, MTN MoMo or Airtel Money via Pesapal."
+msgstr ""
+
+msgid "AROPay Merchant Credentials"
+msgstr ""
+
+msgid "Get yours at %s"
+msgstr ""
+
+msgid "Merchant API Key"
+msgstr ""
+
+msgid "Your AROPay merchant API key."
+msgstr ""
+
+msgid "Merchant API Secret"
+msgstr ""
+
+msgid "Your AROPay merchant API secret. Keep this confidential."
+msgstr ""
+
+msgid "Auto-detect Network"
+msgstr ""
+
+msgid "Automatically detect MTN or Airtel from phone number"
+msgstr ""
+
+msgid "AROPay: Merchant credentials verified successfully."
+msgstr ""
+
+msgid "AROPay: Could not verify merchant credentials. Please check your API Key and Secret."
+msgstr ""
+
+msgid "Mobile Money Phone Number"
+msgstr ""
+
+msgid "required"
+msgstr ""
+
+msgid "e.g. 0771234567"
+msgstr ""
+
+msgid "Network"
+msgstr ""
+
+msgid "MTN Mobile Money"
+msgstr ""
+
+msgid "Airtel Money"
+msgstr ""
+
+msgid "You will receive a payment prompt on this number. Enter your PIN to confirm."
+msgstr ""
+
+msgid "TEST MODE — No real transactions will be processed."
+msgstr ""
+
+msgid "Please check your phone and enter your PIN to complete payment."
+msgstr ""
+
+msgid "Please enter your Mobile Money phone number."
+msgstr ""
+
+msgid "Please enter a valid Ugandan phone number (e.g. 0771234567)."
+msgstr ""
+
+msgid "Order not found."
+msgstr ""
+
+msgid "AROPay only supports UGX (Uganda Shillings). Please contact the store owner."
+msgstr ""
+
+msgid "Payment initiation failed. Please try again or use a different payment method."
+msgstr ""
+
+msgid "Could not connect to Pesapal. Please try again or use Mobile Money."
+msgstr ""
+
+msgid "Payment for Order #%s"
+msgstr ""
+
+msgid "Payment for Order #%s - %s"
+msgstr ""
+
+msgid "Order #%s from %s"
+msgstr ""
+
+msgid "Awaiting MoMo confirmation."
+msgstr ""
+
+msgid "AROPay: MoMo payment requested to %s via %s. Ref: %s"
+msgstr ""
+
+msgid "AROPay: Redirected to Pesapal. Tracking ID: %s"
+msgstr ""
+
+msgid "AROPay: Payment completed via %s. Provider ref: %s"
+msgstr ""
+
+msgid "AROPay: Payment failed."
+msgstr ""
+
+msgid "AROPay: Payment refunded."
+msgstr ""
+
+msgid "Complete Your Payment"
+msgstr ""
+
+msgid "A payment prompt has been sent to your %s phone. Please check your phone and enter your Mobile Money PIN to complete the payment."
+msgstr ""
+
+msgid "Waiting for confirmation…"
+msgstr ""
+
+msgid "Go back and try again"
+msgstr ""
+
+msgid "Need help?"
+msgstr ""
+
+msgid "AROPay Settings"
+msgstr ""
+
+msgid "Settings saved successfully."
+msgstr ""
+
+msgid "Yo Uganda"
+msgstr ""
+
+msgid "Pesapal"
+msgstr ""
+
+msgid "Fees & Settlement"
+msgstr ""
+
+msgid "Branding"
+msgstr ""
+
+msgid "Yo Uganda API Credentials"
+msgstr ""
+
+msgid "These are YOUR Yo Uganda master credentials (the account licensed under AROSOFT/your company)."
+msgstr ""
+
+msgid "Mode"
+msgstr ""
+
+msgid "Sandbox / Test"
+msgstr ""
+
+msgid "Live / Production"
+msgstr ""
+
+msgid "API Username"
+msgstr ""
+
+msgid "API Password"
+msgstr ""
+
+msgid "Callback URL"
+msgstr ""
+
+msgid "Copy this URL into your Yo Uganda account as the callback/notification URL."
+msgstr ""
+
+msgid "Pesapal OpenFloat Credentials"
+msgstr ""
+
+msgid "Your Pesapal OpenFloat Consumer Key and Secret. All merchant payments route through your float."
+msgstr ""
+
+msgid "Consumer Key"
+msgstr ""
+
+msgid "Consumer Secret"
+msgstr ""
+
+msgid "IPN URL"
+msgstr ""
+
+msgid "This is auto-registered with Pesapal on first payment."
+msgstr ""
+
+msgid "Fee & Settlement Configuration"
+msgstr ""
+
+msgid "Default Transaction Fee (%)"
+msgstr ""
+
+msgid "Deducted from each completed transaction before settlement."
+msgstr ""
+
+msgid "Minimum Fee (UGX)"
+msgstr ""
+
+msgid "Settlement Schedule"
+msgstr ""
+
+msgid "Daily (2:00 AM EAT)"
+msgstr ""
+
+msgid "Weekly (Monday 2:00 AM EAT)"
+msgstr ""
+
+msgid "Manual Only"
+msgstr ""
+
+msgid "Branding & Support"
+msgstr ""
+
+msgid "Plugin Display Name"
+msgstr ""
+
+msgid "Shown to customers on payment pages."
+msgstr ""
+
+msgid "Support Email"
+msgstr ""
+
+msgid "Support Phone"
+msgstr ""
+
+msgid "Save Settings"
+msgstr ""
+
+msgid "Dashboard"
+msgstr ""
+
+msgid "Transactions"
+msgstr ""
+
+msgid "Merchants"
+msgstr ""
+
+msgid "Settlements"
+msgstr ""
+
+msgid "API Logs"
+msgstr ""
+
+msgid "Today's Volume"
+msgstr ""
+
+msgid "Today's Revenue"
+msgstr ""
+
+msgid "Transactions Today"
+msgstr ""
+
+msgid "Active Merchants"
+msgstr ""
+
+msgid "Pending Payments"
+msgstr ""
+
+msgid "Pending Settlements"
+msgstr ""
+
+msgid "Action Required:"
+msgstr ""
+
+msgid "%d merchant is awaiting approval."
+msgid_plural "%d merchants are awaiting approval."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Review Now →"
+msgstr ""
+
+msgid "Quick Actions"
+msgstr ""
+
+msgid "View Transactions"
+msgstr ""
+
+msgid "Manage Merchants"
+msgstr ""
+
+msgid "Uganda's Payment Gateway · Powered by AROSOFT"
+msgstr ""
+
+msgid "Invalid credentials or account suspended."
+msgstr ""
+
+msgid "Missing reference."
+msgstr ""
+
+msgid "Transaction not found."
+msgstr ""
+
+msgid "STK push sent. Please check your phone."
+msgstr ""
+
+msgid "No AROPay transaction found for this order."
+msgstr ""
+
+msgid "Transaction not found or not eligible for refund."
+msgstr ""
+
+msgid "Transaction marked as refunded."
+msgstr ""
+
+msgid "Yo API returned HTTP %d."
+msgstr ""
+
+msgid "Failed to parse Yo API response."
+msgstr ""
+
+msgid "Pesapal authentication failed."
+msgstr ""
+
+msgid "Pesapal did not return a redirect URL."
+msgstr ""
+
+msgid "Failed to retrieve Pesapal transaction status."
+msgstr ""
+
+msgid "Pesapal API error %d"
+msgstr ""
+
+msgid "Logs older than 90 days are automatically deleted."
+msgstr ""
+
+msgid "Process settlements for all active merchants?"
+msgstr ""
+
+msgid "Process All Settlements Now"
+msgstr ""

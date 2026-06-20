@@ -1,0 +1,139 @@
+/* AROPay Admin Styles — AROSOFT */
+
+:root {
+    --aro-primary:   #1a1a2e;
+    --aro-accent:    #f0a500;
+    --aro-green:     #27ae60;
+    --aro-red:       #e74c3c;
+    --aro-blue:      #2980b9;
+    --aro-gray:      #6c757d;
+    --aro-light:     #f8f9fa;
+    --aro-border:    #dee2e6;
+    --aro-radius:    8px;
+}
+
+/* ── Header ── */
+.aropay-admin-header {
+    background: var(--aro-primary);
+    color: #fff;
+    padding: 20px 24px;
+    border-radius: var(--aro-radius);
+    margin-bottom: 24px;
+}
+.aropay-logo-title {
+    font-size: 28px;
+    font-weight: 800;
+    margin: 0 0 4px;
+    color: #fff !important;
+}
+.aropay-logo-badge {
+    background: var(--aro-accent);
+    color: var(--aro-primary);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 22px;
+}
+.aropay-tagline { margin: 0; opacity: 0.75; font-size: 13px; }
+
+/* ── Stats Grid ── */
+.aropay-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+.aropay-stat-card {
+    background: #fff;
+    border: 1px solid var(--aro-border);
+    border-radius: var(--aro-radius);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    transition: transform .15s;
+}
+.aropay-stat-card:hover { transform: translateY(-2px); }
+.aropay-stat-icon { font-size: 28px; }
+.aropay-stat-body { display: flex; flex-direction: column; }
+.aropay-stat-number { font-size: 20px; font-weight: 700; color: var(--aro-primary); }
+.aropay-stat-label  { font-size: 12px; color: var(--aro-gray); }
+
+/* ── Notices ── */
+.aropay-notice {
+    padding: 12px 16px;
+    border-radius: var(--aro-radius);
+    margin-bottom: 16px;
+    border-left: 4px solid;
+}
+.aropay-notice-warning { background: #fff8e1; border-color: var(--aro-accent); }
+.aropay-notice a { color: var(--aro-primary); font-weight: 600; }
+
+/* ── Quick links ── */
+.aropay-quick-grid {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+.aropay-quick-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 18px;
+    background: var(--aro-primary);
+    color: #fff !important;
+    border-radius: var(--aro-radius);
+    font-weight: 600;
+    text-decoration: none;
+    transition: opacity .15s;
+}
+.aropay-quick-btn:hover { opacity: .85; }
+
+/* ── Badges ── */
+.aropay-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.aropay-badge-completed  { background: #d4edda; color: #155724; }
+.aropay-badge-pending    { background: #fff3cd; color: #856404; }
+.aropay-badge-failed     { background: #f8d7da; color: #721c24; }
+.aropay-badge-refunded   { background: #d1ecf1; color: #0c5460; }
+.aropay-badge-active     { background: #d4edda; color: #155724; }
+.aropay-badge-suspended  { background: #f8d7da; color: #721c24; }
+.aropay-badge-settled    { background: #d4edda; color: #155724; }
+.aropay-badge-yo         { background: #fff3cd; color: #856404; }
+.aropay-badge-pesapal    { background: #cce5ff; color: #004085; }
+
+/* ── Tables ── */
+.aropay-table { font-size: 13px; }
+.aropay-table th { background: var(--aro-light) !important; font-weight: 700; }
+.aropay-logs-table code { font-size: 11px; }
+.aropay-log-preview { color: var(--aro-gray); }
+
+/* ── Filters ── */
+.aropay-filter-form { margin: 12px 0; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.aropay-filter-form input, .aropay-filter-form select { font-size: 13px; }
+
+/* ── Tabs ── */
+.aropay-tabs.nav-tab-wrapper { margin-bottom: 0; }
+.aropay-form-table { margin-top: 0; }
+.aropay-settings-form { background: #fff; border: 1px solid var(--aro-border); border-top: none; padding: 20px; border-radius: 0 0 var(--aro-radius) var(--aro-radius); }
+
+/* ── Pagination ── */
+.aropay-pagination { margin: 16px 0; }
+.aropay-pagination .page-numbers { margin-right: 4px; }
+
+/* ── Action bar ── */
+.aropay-action-bar { margin: 12px 0; }
+
+/* ── Tab filter ── */
+.aropay-tab-filter { margin: 12px 0; display: flex; gap: 6px; }
+
+/* ── Footer ── */
+.aropay-footer-note { margin-top: 32px; color: var(--aro-gray); font-size: 12px; }
+.aropay-footer-note a { color: var(--aro-primary); }
