@@ -18,6 +18,11 @@ class AROPay_Admin {
         add_action( 'admin_post_aropay_save_settings',     array( $this, 'handle_save_settings' ) );
         add_action( 'admin_post_aropay_trigger_settlement',array( $this, 'handle_trigger_settlement' ) );
         add_action( 'admin_post_aropay_mark_settled',      array( $this, 'handle_mark_settled' ) );
+        add_action( 'admin_post_aropay_switch_mode',       array( $this, 'handle_switch_mode' ) );
+        add_action( 'admin_post_aropay_approve_phone',     array( $this, 'handle_approve_phone' ) );
+        add_action( 'admin_post_aropay_reject_phone',      array( $this, 'handle_reject_phone' ) );
+        add_action( 'admin_post_aropay_approve_phone_change', array( $this, 'handle_approve_phone_change' ) );
+        add_action( 'admin_post_aropay_reject_phone_change',  array( $this, 'handle_reject_phone_change' ) );
     }
 
     /**
@@ -37,6 +42,9 @@ class AROPay_Admin {
         add_submenu_page( 'aropay', __( 'Dashboard', 'aropay' ),    __( 'Dashboard', 'aropay' ),    'manage_woocommerce', 'aropay',                   array( $this, 'page_dashboard' ) );
         add_submenu_page( 'aropay', __( 'Transactions', 'aropay' ), __( 'Transactions', 'aropay' ), 'manage_woocommerce', 'aropay-transactions',       array( $this, 'page_transactions' ) );
         add_submenu_page( 'aropay', __( 'Merchants', 'aropay' ),    __( 'Merchants', 'aropay' ),    'manage_woocommerce', 'aropay-merchants',          array( $this, 'page_merchants' ) );
+        add_submenu_page( 'aropay', __( 'Wallets', 'aropay' ),      __( 'Wallets', 'aropay' ),      'manage_woocommerce', 'aropay-wallets',            array( $this, 'page_wallets' ) );
+        add_submenu_page( 'aropay', __( 'Payout Phones', 'aropay' ), __( 'Payout Phones', 'aropay' ), 'manage_woocommerce', 'aropay-wallet-phones',    array( $this, 'page_wallet_phones' ) );
+        add_submenu_page( 'aropay', __( 'Audit Log', 'aropay' ),    __( 'Audit Log', 'aropay' ),    'manage_woocommerce', 'aropay-wallet-audit',       array( $this, 'page_wallet_audit' ) );
         add_submenu_page( 'aropay', __( 'Settlements', 'aropay' ),  __( 'Settlements', 'aropay' ),  'manage_woocommerce', 'aropay-settlements',        array( $this, 'page_settlements' ) );
         add_submenu_page( 'aropay', __( 'Settings', 'aropay' ),     __( 'Settings', 'aropay' ),     'manage_woocommerce', 'aropay-settings',           array( $this, 'page_settings' ) );
         add_submenu_page( 'aropay', __( 'API Logs', 'aropay' ),     __( 'API Logs', 'aropay' ),     'manage_woocommerce', 'aropay-logs',               array( $this, 'page_logs' ) );
@@ -149,23 +157,30 @@ class AROPay_Admin {
 
         $tab = sanitize_text_field( $_POST['aropay_tab'] ?? 'yo' );
 
-        if ( 'yo' === $tab ) {
+        if ( 'license' === $tab ) {
+            $key    = sanitize_text_field( $_POST['license_key'] ?? '' );
+            $result = AROPay_License::activate( $key );
+            $msg    = $result['valid'] ? 'activated' : 'failed';
+            wp_redirect( admin_url( "admin.php?page=aropay-settings&tab=license&license_msg={$msg}" ) );
+            exit;
+        }
+
+        if ( 'yo' === $tab && AROPay_License::is_own_api() ) {
             AROPay_Encryption::set_option( 'aropay_yo_username', sanitize_text_field( $_POST['yo_username'] ?? '' ) );
             AROPay_Encryption::set_option( 'aropay_yo_password', sanitize_text_field( $_POST['yo_password'] ?? '' ) );
             update_option( 'aropay_yo_test_mode', sanitize_text_field( $_POST['yo_test_mode'] ?? 'yes' ) );
         }
 
-        if ( 'pesapal' === $tab ) {
+        if ( 'pesapal' === $tab && AROPay_License::is_own_api() ) {
             AROPay_Encryption::set_option( 'aropay_pesapal_consumer_key',    sanitize_text_field( $_POST['pesapal_consumer_key'] ?? '' ) );
             AROPay_Encryption::set_option( 'aropay_pesapal_consumer_secret', sanitize_text_field( $_POST['pesapal_consumer_secret'] ?? '' ) );
             update_option( 'aropay_pesapal_test_mode', sanitize_text_field( $_POST['pesapal_test_mode'] ?? 'yes' ) );
-            // Clear cached token so next call re-authenticates
             delete_transient( 'aropay_pesapal_token' );
             delete_option( 'aropay_pesapal_ipn_id' );
         }
 
         if ( 'fees' === $tab ) {
-            update_option( 'aropay_default_fee_percent',  (float) ( $_POST['default_fee_percent'] ?? 1.50 ) );
+            update_option( 'aropay_default_fee_percent',  (float) ( $_POST['default_fee_percent'] ?? 7.00 ) );
             update_option( 'aropay_min_fee_ugx',          absint( $_POST['min_fee_ugx'] ?? 500 ) );
             update_option( 'aropay_settlement_schedule',  sanitize_text_field( $_POST['settlement_schedule'] ?? 'daily' ) );
         }
@@ -204,4 +219,103 @@ class AROPay_Admin {
         wp_redirect( admin_url( 'admin.php?page=aropay-settlements&msg=settled' ) );
         exit;
     }
-}
+
+    // ── Collection Mode ──────────────────────────────────────────────────────
+
+    public function handle_switch_mode() {
+        check_admin_referer( 'aropay_switch_mode' );
+        if ( ! current_user_can( 'manage_woocommerce' ) ) wp_die( 'Unauthorized' );
+        $mode = sanitize_key( $_POST['mode'] ?? 'managed' );
+        if ( ! in_array( $mode, array( 'managed', 'own_api' ), true ) ) {
+            $mode = 'managed';
+        }
+        // Switching to own_api requires active license
+        if ( 'own_api' === $mode ) {
+            $check = AROPay_License::check();
+            if ( ! $check['valid'] ) {
+                wp_redirect( admin_url( 'admin.php?page=aropay-settings&tab=license&license_msg=need_license' ) );
+                exit;
+            }
+        }
+        update_option( 'aropay_collection_mode', $mode );
+        wp_redirect( admin_url( 'admin.php?page=aropay-settings&saved=1' ) );
+        exit;
+    }
+
+    // ── Wallet Phone Admin Actions ───────────────────────────────────────────
+
+    public function handle_approve_phone() {
+        check_admin_referer( 'aropay_phone_action' );
+        if ( ! current_user_can( 'manage_woocommerce' ) ) wp_die( 'Unauthorized' );
+        $id = absint( $_POST['phone_id'] ?? 0 );
+        AROPay_Wallet_Phone::approve( $id, get_current_user_id() );
+        wp_redirect( admin_url( 'admin.php?page=aropay-wallet-phones&msg=approved' ) );
+        exit;
+    }
+
+    public function handle_reject_phone() {
+        check_admin_referer( 'aropay_phone_action' );
+        if ( ! current_user_can( 'manage_woocommerce' ) ) wp_die( 'Unauthorized' );
+        $id   = absint( $_POST['phone_id'] ?? 0 );
+        $note = sanitize_textarea_field( $_POST['rejection_note'] ?? '' );
+        AROPay_Wallet_Phone::reject( $id, get_current_user_id(), $note );
+        wp_redirect( admin_url( 'admin.php?page=aropay-wallet-phones&msg=rejected' ) );
+        exit;
+    }
+
+    public function handle_approve_phone_change() {
+        check_admin_referer( 'aropay_phone_change_action' );
+        if ( ! current_user_can( 'manage_woocommerce' ) ) wp_die( 'Unauthorized' );
+        $id = absint( $_POST['change_id'] ?? 0 );
+        AROPay_Wallet_Phone::approve_change( $id, get_current_user_id() );
+        wp_redirect( admin_url( 'admin.php?page=aropay-wallet-phones&tab=changes&msg=change_approved' ) );
+        exit;
+    }
+
+    public function handle_reject_phone_change() {
+        check_admin_referer( 'aropay_phone_change_action' );
+        if ( ! current_user_can( 'manage_woocommerce' ) ) wp_die( 'Unauthorized' );
+        $id    = absint( $_POST['change_id'] ?? 0 );
+        $notes = sanitize_textarea_field( $_POST['notes'] ?? '' );
+        AROPay_Wallet_Phone::reject_change( $id, get_current_user_id(), $notes );
+        wp_redirect( admin_url( 'admin.php?page=aropay-wallet-phones&tab=changes&msg=change_rejected' ) );
+        exit;
+    }
+
+    // ── Wallet Admin Pages ───────────────────────────────────────────────────
+
+    public function page_wallets() {
+        $page    = max( 1, absint( $_GET['paged'] ?? 1 ) );
+        $search  = sanitize_text_field( $_GET['s'] ?? '' );
+        $result  = AROPay_Wallet::get_all_wallets( $page, 20, $search );
+        $wallets = $result['wallets'];
+        $total   = $result['total'];
+        $total_pages = ceil( $total / 20 );
+        $stats   = AROPay_Wallet::get_global_stats();
+        include AROPAY_PLUGIN_DIR . 'admin/partials/aropay-admin-wallets.php';
+    }
+
+    public function page_wallet_phones() {
+        $active_tab  = sanitize_text_field( $_GET['tab'] ?? 'phones' );
+        $page        = max( 1, absint( $_GET['paged'] ?? 1 ) );
+        $status      = sanitize_text_field( $_GET['status'] ?? 'all' );
+        $phones_result   = AROPay_Wallet_Phone::get_all_phones( array( 'status' => $status ), $page, 20 );
+        $changes_result  = AROPay_Wallet_Phone::get_all_changes( array( 'status' => 'all' ), $page, 20 );
+        $counts          = AROPay_Wallet_Phone::get_counts_by_status();
+        include AROPAY_PLUGIN_DIR . 'admin/partials/aropay-admin-wallet-phones.php';
+    }
+
+    public function page_wallet_audit() {
+        $page    = max( 1, absint( $_GET['paged'] ?? 1 ) );
+        $filters = array(
+            'user_id'   => absint( $_GET['user_id'] ?? 0 ) ?: null,
+            'action'    => sanitize_key( $_GET['action_type'] ?? 'all' ),
+            'date_from' => sanitize_text_field( $_GET['date_from'] ?? '' ),
+            'date_to'   => sanitize_text_field( $_GET['date_to'] ?? '' ),
+        );
+        $result  = AROPay_Wallet::get_audit_log( $filters, $page, 50 );
+        $logs    = $result['logs'];
+        $total   = $result['total'];
+        $total_pages = ceil( $total / 50 );
+        include AROPAY_PLUGIN_DIR . 'admin/partials/aropay-admin-wallet-audit.php';
+    }

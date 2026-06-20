@@ -238,7 +238,7 @@ class AROPay_Activator {
         $defaults = array(
             'aropay_yo_test_mode'            => 'yes',
             'aropay_pesapal_test_mode'       => 'yes',
-            'aropay_default_fee_percent'     => '1.50',
+            'aropay_default_fee_percent'     => '7.00',
             'aropay_min_fee_ugx'             => '500',
             'aropay_settlement_schedule'     => 'daily',
             'aropay_support_email'           => get_option( 'admin_email' ),
@@ -250,6 +250,8 @@ class AROPay_Activator {
             'aropay_pesapal_consumer_secret' => '',
             'aropay_withdrawal_fee_percent'  => '1.50',
             'aropay_min_withdrawal_ugx'      => '5000',
+            'aropay_collection_mode'         => 'managed',
+            'aropay_license_key'             => '',
         );
 
         foreach ( $defaults as $key => $value ) {

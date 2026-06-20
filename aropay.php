@@ -87,11 +87,16 @@ function aropay_init() {
     require_once AROPAY_PLUGIN_DIR . 'includes/class-aropay-loader.php';
     require_once AROPAY_PLUGIN_DIR . 'includes/class-aropay-helpers.php';
     require_once AROPAY_PLUGIN_DIR . 'includes/class-aropay-encryption.php';
+    require_once AROPAY_PLUGIN_DIR . 'includes/class-aropay-license.php';
     require_once AROPAY_PLUGIN_DIR . 'includes/class-aropay-merchant.php';
     require_once AROPAY_PLUGIN_DIR . 'includes/class-aropay-transaction.php';
     require_once AROPAY_PLUGIN_DIR . 'includes/class-aropay-settlement.php';
     require_once AROPAY_PLUGIN_DIR . 'includes/class-aropay-webhook.php';
     require_once AROPAY_PLUGIN_DIR . 'includes/class-aropay-api.php';
+    require_once AROPAY_PLUGIN_DIR . 'includes/class-aropay-wallet.php';
+    require_once AROPAY_PLUGIN_DIR . 'includes/class-aropay-wallet-phone.php';
+    require_once AROPAY_PLUGIN_DIR . 'includes/class-aropay-withdrawal.php';
+    require_once AROPAY_PLUGIN_DIR . 'includes/class-aropay-wallet-ui.php';
     require_once AROPAY_PLUGIN_DIR . 'includes/class-aropay-core.php';
 
     // Load gateway files
